@@ -14,9 +14,9 @@ function App() {
     <>
       <div className="fixed inset-0 z-0 w-screen h-screen bg-dark-bg">
         <Grainient
-          color1="#168F88"
-          color2="#0A4545"
-          color3="#02141B"
+          color1="#e6ac24"
+          color2="#3d2b00"
+          color3="#000000"
           timeSpeed={0.275}
           zoom={0.9}
         />
