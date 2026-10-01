@@ -55,21 +55,25 @@ The design is nothing to write home about, but its my first React app so I think
 
 ### Project Links
 
-- GitHub Repo: https://github.com/NoroffFEU/jsfw-2025-v1-larstp-jsf
-- Live Site (Vercel): ILL ADD THIS WHEN I HAVE IT
+- Original GitHub Repo: https://github.com/NoroffFEU/jsfw-2025-v1-larstp-jsf
+- Live Site (Vercel): https://butta.larstp.com
+
+### POR2 styling comparison
+
+The original styling for the POR2 assignment is preserved in the `old-styling` branch so the styling changes can be compared with the current version.
 
 ## 2. Setup and Installation
 
 ### Prerequisites
 
-- Node.js version: >=20.19.0 and <21
+- Node.js version: 24.x
 - npm
 
 ### Install and run locally
 
 ```bash
-git clone https://github.com/NoroffFEU/jsfw-2025-v1-larstp-jsf.git
-cd jsfw-2025-v1-larstp-jsf
+git clone https://github.com/larstp/Butta.git
+cd Butta
 npm install
 npm run dev
 ```
