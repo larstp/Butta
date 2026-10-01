@@ -83,7 +83,7 @@ button {
 
 .app-button:hover {
   transform: translateY(-1px);
-  filter: brightness(1.03);
+  filter: brightness(0.92);
   box-shadow: 0 20px 45px rgba(0, 0, 0, 0.42);
 }
 
