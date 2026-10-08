@@ -1,4 +1,4 @@
-import { useEffect, useState, type ReactNode } from "react";
+import { useCallback, useEffect, useState, type ReactNode } from "react";
 import type { CartContextValue, CartItem } from "../types/cart";
 import { CartContext } from "./cart-context";
 
@@ -84,10 +84,10 @@ export function CartProvider({ children }: CartProviderProps) {
     );
   };
 
-  const clearCart = () => {
+  const clearCart = useCallback(() => {
     setItems([]);
     window.localStorage.removeItem(CART_STORAGE_KEY);
-  };
+  }, []);
 
   const value: CartContextValue = {
     items,

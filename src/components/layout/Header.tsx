@@ -38,7 +38,7 @@ export function Header() {
   }, []);
 
   return (
-    <header className="sticky top-0 z-20 border-b border-white/10 bg-black/55 backdrop-blur-2xl">
+    <header className="sticky top-0 z-40 border-b border-white/10 bg-black/55 backdrop-blur-2xl">
       <div className="flex items-center justify-between px-4 py-4 mx-auto max-w-7xl">
         <h1 className="m-0">
           <Link to="/" aria-label="Home">
@@ -53,11 +53,15 @@ export function Header() {
         <div ref={menuRef} className="relative flex items-center gap-3">
           <Link
             to="/cart"
-            className="!hidden items-center gap-2 px-3 py-2 text-sm app-button md:!inline-flex"
+            className="hidden! items-center gap-2 p-2 text-white transition hover:text-white/70 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white md:inline-flex!"
             aria-label={`View cart, ${itemCount} items`}
           >
-            <img src={CartIcon} alt="" className="w-5 h-5" />
-            <span className="text-sm">{itemCount}</span>
+            <img
+              src={CartIcon}
+              alt=""
+              className="h-7 w-7 brightness-0 invert"
+            />
+            <span className="text-sm font-semibold">{itemCount}</span>
           </Link>
 
           <button
@@ -86,14 +90,14 @@ export function Header() {
               <Link
                 to="/contact"
                 onClick={() => setIsMenuOpen(false)}
-                className="block px-4 py-3 text-sm font-semibold transition rounded-lg text-text-primary hover:bg-white/10"
+                className="block rounded-lg px-4 py-3 text-sm font-semibold text-white transition hover:bg-white/10"
               >
                 Contact
               </Link>
               <Link
                 to="/cart"
                 onClick={() => setIsMenuOpen(false)}
-                className="block px-4 py-3 text-sm font-semibold transition rounded-lg text-text-primary hover:bg-white/10 md:hidden"
+                className="block rounded-lg px-4 py-3 text-sm font-semibold text-white transition hover:bg-white/10 md:hidden"
               >
                 Cart ({itemCount})
               </Link>

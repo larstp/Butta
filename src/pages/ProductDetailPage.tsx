@@ -61,8 +61,17 @@ export function ProductDetailPage() {
         <p className="mb-4 text-text-error">
           Error: {error || "Product not found"}
         </p>
-        <button onClick={() => navigate("/")} className="px-4 py-2 app-button">
-          Back to Shop
+        <button
+          type="button"
+          onClick={() => navigate("/")}
+          className="back-link inline-flex items-center gap-2 text-text-secondary transition focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-white"
+        >
+          <img
+            src="/lucide_chevron-left.svg"
+            alt=""
+            className="h-5 w-5 brightness-0 invert"
+          />
+          Back
         </button>
       </div>
     );
@@ -75,10 +84,16 @@ export function ProductDetailPage() {
   return (
     <div className="px-4 py-10 mx-auto max-w-7xl sm:px-6 lg:px-8">
       <button
+        type="button"
         onClick={() => navigate("/")}
-        className="px-4 py-2 mb-8 text-sm app-button"
+        className="back-link mb-8 inline-flex items-center gap-2 text-sm text-text-secondary transition focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-white"
       >
-        ← Back to Shop
+        <img
+          src="/lucide_chevron-left.svg"
+          alt=""
+          className="h-5 w-5 brightness-0 invert"
+        />
+        Back
       </button>
 
       <div className="grid grid-cols-1 gap-12 md:grid-cols-2">
@@ -107,7 +122,7 @@ export function ProductDetailPage() {
           </div>
         </div>
 
-        <div className="space-y-6 ">
+        <div className="space-y-6 rounded-3xl border border-white/10 bg-white/5 p-6 backdrop-blur-md">
           <div>
             <h1 className="mb-2 text-3xl font-bold text-text-primary">
               {product.title}

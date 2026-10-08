@@ -98,29 +98,6 @@ export function ProductCard({ product }: ProductCardProps) {
           </p>
         </div>
 
-        <div className="flex items-stretch justify-between gap-4 mt-4">
-          <div className="flex flex-col justify-between flex-1 min-w-0">
-            <p className="text-lg font-bold text-teal-accent">
-              {formatPrice(currentPrice ?? product.price)}
-            </p>
-            {hasDiscount && (
-              <p className="text-sm line-through text-text-muted">
-                {formatPrice(product.price)}
-              </p>
-            )}
-            <div className="w-full max-w-xs mt-3">
-              <AddToCartButtonInline
-                product={product}
-                currentPrice={currentPrice}
-              />
-            </div>
-          </div>
-
-          <div className="inline-flex h-11 cursor-default select-none items-center justify-center self-end px-3 text-sm font-medium text-text-secondary">
-            ★ {product.rating}
-          </div>
-        </div>
-
         {product.tags.length > 0 && (
           <ul className="flex flex-wrap gap-2 mt-4 list-none">
             {product.tags.slice(0, 3).map((tag) => (
@@ -134,6 +111,29 @@ export function ProductCard({ product }: ProductCardProps) {
             ))}
           </ul>
         )}
+
+        <div className="flex items-stretch justify-between gap-4 mt-4">
+          <div className="flex flex-col justify-between flex-1 min-w-0">
+            <p className="text-lg font-bold text-teal-accent">
+              {formatPrice(currentPrice ?? product.price)}
+            </p>
+            {hasDiscount && (
+              <p className="text-sm text-red-700 line-through">
+                {formatPrice(product.price)}
+              </p>
+            )}
+            <div className="w-full max-w-xs mt-3">
+              <AddToCartButtonInline
+                product={product}
+                currentPrice={currentPrice}
+              />
+            </div>
+          </div>
+
+          <div className="inline-flex items-center self-end justify-center px-3 text-sm font-medium cursor-default select-none h-11 text-(--teal)">
+            ★ {product.rating}
+          </div>
+        </div>
       </div>
     </article>
   );

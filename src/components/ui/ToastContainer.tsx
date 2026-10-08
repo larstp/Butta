@@ -9,12 +9,12 @@ export function ToastContainer() {
       {toasts.map((toast: Toast) => (
         <div
           key={toast.id}
-          className={`px-4 py-3 rounded-lg shadow-lg text-white font-medium max-w-sm animate-in fade-in slide-in-from-bottom-4 duration-300 ${
+          className={`max-w-sm animate-in slide-in-from-bottom-4 rounded-lg border px-4 py-3 font-medium text-white shadow-lg backdrop-blur-xl fade-in duration-300 ${
             toast.type === "success"
-              ? "bg-green-500"
+              ? "border-green-300/30 bg-green-500/20"
               : toast.type === "error"
-                ? "bg-red-500"
-                : "bg-blue-500"
+                ? "border-red-300/30 bg-red-500/20"
+                : "border-blue-300/30 bg-blue-500/20"
           }`}
         >
           <div className="flex items-center justify-between gap-4">
