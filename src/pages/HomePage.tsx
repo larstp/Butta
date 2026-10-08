@@ -3,7 +3,7 @@ import { ProductCard } from "../components/ui/ProductCard";
 import { getProducts } from "../services/products";
 import type { Product } from "../types/product";
 import type { ProductFilters } from "../types/shop";
-import SortIcon from "../assets/ic_sharp-sort.svg";
+import { getCurrentPrice, isProductOnSale } from "../utils/price";
 
 type SortOption = "none" | "sale" | "price-high-low" | "price-low-high";
 
@@ -13,7 +13,6 @@ export function HomePage() {
   const [error, setError] = useState<string | null>(null);
   const [filters, setFilters] = useState<ProductFilters>({ search: "" });
   const [sortOption, setSortOption] = useState<SortOption>("none");
-  const [isSortOpen, setIsSortOpen] = useState(false);
 
   useEffect(() => {
     const fetchProducts = async () => {
@@ -47,37 +46,23 @@ export function HomePage() {
   let sortedProducts: Product[] = filteredProducts;
 
   if (sortOption !== "none") {
-    // I have no idea if this is the way to do it. it looks TERRIBLE, but it works.
-    sortedProducts = [...filteredProducts].sort((left, right) => {
-      const leftHasDiscount =
-        left.discountedPrice !== null && left.discountedPrice !== undefined;
-      const rightHasDiscount =
-        right.discountedPrice !== null && right.discountedPrice !== undefined;
-
-      if (sortOption === "sale") {
-        if (leftHasDiscount !== rightHasDiscount) {
-          return leftHasDiscount ? -1 : 1;
+    if (sortOption === "sale") {
+      sortedProducts = filteredProducts
+        .filter((product) => isProductOnSale(product))
+        .sort((left, right) => getCurrentPrice(left) - getCurrentPrice(right));
+    } else {
+      sortedProducts = [...filteredProducts].sort((left, right) => {
+        if (sortOption === "price-high-low") {
+          const leftPrice = getCurrentPrice(left);
+          const rightPrice = getCurrentPrice(right);
+          return rightPrice - leftPrice;
         }
 
-        if (leftHasDiscount && rightHasDiscount) {
-          const leftDiscount = left.discountedPrice ?? left.price;
-          const rightDiscount = right.discountedPrice ?? right.price;
-          return leftDiscount - rightDiscount;
-        }
-
-        return left.title.localeCompare(right.title);
-      }
-
-      if (sortOption === "price-high-low") {
-        const leftPrice = left.discountedPrice ?? left.price;
-        const rightPrice = right.discountedPrice ?? right.price;
-        return rightPrice - leftPrice;
-      }
-
-      const leftPrice = left.discountedPrice ?? left.price;
-      const rightPrice = right.discountedPrice ?? right.price;
-      return leftPrice - rightPrice;
-    });
+        const leftPrice = getCurrentPrice(left);
+        const rightPrice = getCurrentPrice(right);
+        return leftPrice - rightPrice;
+      });
+    }
   }
 
   if (loading) {
@@ -91,102 +76,101 @@ export function HomePage() {
   }
 
   return (
-    <div className="px-4 py-10 mx-auto max-w-7xl sm:px-6 lg:px-8">
-      <div className="p-6 mb-10 space-y-3 bg-black/30 backdrop-blur-sm rounded-2xl">
-        <h1 className="text-4xl font-bold text-white mix-blend-difference">
-          Welcome to Butta!
-        </h1>
-        <p className="max-w-2xl italic font-thin text-white mix-blend-difference">
-          "Butta" is the Norwegian slang term for "Store", Short for "Butikk"
-        </p>
-        <p className="max-w-2xl text-white mix-blend-difference">
-          Browse our lates and greatest items!
-        </p>
-      </div>
-
-      <div className="flex flex-col gap-3 mb-8 md:flex-row md:items-start">
-        <div className="relative flex-1">
-          <input
-            type="text"
-            placeholder="Search products by name, description, or tag..."
-            value={filters.search}
-            onChange={(e) => setFilters({ ...filters, search: e.target.value })}
-            className="w-full px-4 py-3 transition border rounded-lg outline-none text-text-primary bg-input-bg border-input-border placeholder-input-placeholder focus:border-teal-accent focus:ring-2 focus:ring-teal-accent/30"
-          />
-        </div>
-
-        <div className="relative md:w-56">
-          <button
-            type="button"
-            onClick={() => setIsSortOpen((open) => !open)}
-            className="flex items-center justify-center w-full gap-3 px-4 py-3 app-button"
-            aria-haspopup="listbox"
-            aria-expanded={isSortOpen}
-            aria-label={`Sort options. Current: ${
-              sortOption === "none"
-                ? "Newest"
-                : sortOption === "sale"
-                  ? "Sale"
-                  : sortOption === "price-high-low"
-                    ? "Price high to low"
-                    : "Price low to high"
-            }`}
-          >
-            <img src={SortIcon} alt="Sort" className="w-5 h-5" />
-            <span className="ml-3 text-sm text-text-tertiary">
-              {sortOption === "none"
-                ? "Newest"
-                : sortOption === "sale"
-                  ? "SALE"
-                  : sortOption === "price-high-low"
-                    ? "Price: high→low"
-                    : "Price: low→high"}
-            </span>
-          </button>
-
-          {isSortOpen && (
-            <div className="absolute right-0 top-full z-30 mt-2 w-full overflow-hidden rounded-2xl border border-white/10 bg-black/55 p-2 shadow-[0_20px_60px_rgba(0,0,0,0.55)] backdrop-blur-sm">
-              {[
-                { value: "sale", label: "SALE" },
-                { value: "price-high-low", label: "Price: high to low" },
-                { value: "price-low-high", label: "Price: low to high" },
-              ].map((option) => (
-                <button
-                  key={option.value}
-                  type="button"
-                  onClick={() => {
-                    setSortOption(option.value as SortOption);
-                    setIsSortOpen(false);
-                  }}
-                  className="block w-full px-5 py-3 text-sm leading-6 text-left transition-colors duration-150 bg-transparent rounded-lg text-text-primary hover:bg-white/95 hover:text-black hover:shadow-lg"
-                >
-                  {option.label}
-                </button>
-              ))}
-            </div>
-          )}
-        </div>
-      </div>
-
-      <div className="mb-4 text-sm text-text-tertiary">
-        Showing {sortedProducts.length} of {products.length} products
-      </div>
-
-      {sortedProducts.length > 0 ? (
-        <div className="rounded-4xl border border-white/10 bg-black/30 p-4 shadow-[0_30px_90px_rgba(0,0,0,0.45)] backdrop-blur-2xl sm:p-6">
-          <div className="grid grid-cols-1 gap-6 md:grid-cols-2 xl:grid-cols-3">
-            {sortedProducts.map((product) => (
-              <ProductCard key={product.id} product={product} />
-            ))}
+    <div className="mx-auto max-w-7xl">
+      <section className="relative w-screen px-4 pt-4 pb-16 overflow-hidden -translate-x-1/2 isolate left-1/2 sm:px-6 lg:px-8">
+        <div className="absolute inset-0 pointer-events-none hero-fade" />
+        <div className="relative z-10 flex items-start justify-center max-w-4xl mx-auto min-h-48">
+          <div className="w-full max-w-3xl text-left">
+            <h1
+              className="hero-heading hero-marquee relative left-1/2 w-[calc(100vw-2rem)] max-w-none -translate-x-1/2 pb-2 text-4xl font-semibold leading-[0.95] text-(--teal) sm:text-5xl lg:text-6xl"
+              aria-label="Explore headphones, perfumes, shoes, skincare, bags, glasses, watches, and tech."
+            >
+              <span className="hero-marquee-track" aria-hidden="true">
+                <span className="hero-marquee-text">
+                  <span aria-hidden="true">·</span> Headphones{" "}
+                  <span aria-hidden="true">·</span> Perfumes{" "}
+                  <span aria-hidden="true">·</span> Shoes{" "}
+                  <span aria-hidden="true">·</span> Skincare{" "}
+                  <span aria-hidden="true">·</span> Bags{" "}
+                  <span aria-hidden="true">·</span> Glasses{" "}
+                  <span aria-hidden="true">·</span> Watches{" "}
+                  <span aria-hidden="true">·</span> Tech
+                </span>
+                <span className="hero-marquee-text">
+                  <span aria-hidden="true">·</span> Headphones{" "}
+                  <span aria-hidden="true">·</span> Perfumes{" "}
+                  <span aria-hidden="true">·</span> Shoes{" "}
+                  <span aria-hidden="true">·</span> Skincare{" "}
+                  <span aria-hidden="true">·</span> Bags{" "}
+                  <span aria-hidden="true">·</span> Glasses{" "}
+                  <span aria-hidden="true">·</span> Watches{" "}
+                  <span aria-hidden="true">·</span> Tech
+                </span>
+              </span>
+            </h1>
           </div>
         </div>
-      ) : (
-        <div className="p-8 text-center border rounded-lg bg-bg-secondary border-border-primary">
-          <p className="text-text-secondary">
-            No products found matching "{filters.search}"
-          </p>
+      </section>
+
+      <div className="px-4 sm:px-6 lg:px-8">
+        <div className="relative z-20 -mt-35 mb-8 flex flex-col overflow-hidden rounded-lg border border-white/25 bg-white/10 shadow-[inset_0_1px_0_rgba(255,255,255,0.18),0_16px_35px_rgba(0,0,0,0.2)] backdrop-blur-xl md:flex-row md:items-start">
+          <div className="relative flex-1">
+            <input
+              type="text"
+              placeholder="Search products by name, description, or tag..."
+              value={filters.search}
+              onChange={(e) =>
+                setFilters({ ...filters, search: e.target.value })
+              }
+              className="glass-search h-12 w-full rounded-b-none rounded-t-lg border-b-0 px-4 py-3 text-white! transition border-transparent! bg-transparent! outline-none placeholder-input-placeholder focus:border-white/40! focus:ring-2 focus:ring-white/20 md:rounded-b-lg md:rounded-r-none md:rounded-br-none md:rounded-tr-none md:border-b md:border-r-0"
+            />
+          </div>
+
+          <div className="relative md:w-56">
+            <label htmlFor="sort-products" className="sr-only">
+              Sort products
+            </label>
+            <select
+              id="sort-products"
+              aria-label="Sort products"
+              value={sortOption}
+              onChange={(event) =>
+                setSortOption(event.target.value as SortOption)
+              }
+              className="glass-sort -mt-px h-12 w-full cursor-pointer appearance-none rounded-b-lg rounded-t-none border-t-0 px-4 py-3 pr-10 text-right border-transparent! bg-transparent! text-white! outline-none transition focus:border-white/40! focus:ring-2 focus:ring-white/20 md:mt-0 md:rounded-l-none md:rounded-r-lg md:border-t md:border-l-0"
+            >
+              <option value="none">All</option>
+              <option value="sale">On sale</option>
+              <option value="price-high-low">Price: high to low</option>
+              <option value="price-low-high">Price: low to high</option>
+            </select>
+            <span
+              aria-hidden="true"
+              className="absolute w-2 h-2 rotate-45 -translate-y-1/2 border-b-2 border-r-2 border-white pointer-events-none right-4 top-1/2"
+            />
+          </div>
         </div>
-      )}
+
+        <div className="mb-4 text-sm text-text-tertiary">
+          Showing {sortedProducts.length} of {products.length} products
+        </div>
+
+        {sortedProducts.length > 0 ? (
+          <div className="rounded-4xl border border-white/10 bg-black/30 p-4 shadow-[0_30px_90px_rgba(0,0,0,0.45)] backdrop-blur-2xl sm:p-6">
+            <div className="grid grid-cols-1 gap-6 md:grid-cols-2 xl:grid-cols-3">
+              {sortedProducts.map((product) => (
+                <ProductCard key={product.id} product={product} />
+              ))}
+            </div>
+          </div>
+        ) : (
+          <div className="p-8 text-center border rounded-lg bg-bg-secondary border-border-primary">
+            <p className="text-text-secondary">
+              No products found matching "{filters.search}"
+            </p>
+          </div>
+        )}
+      </div>
     </div>
   );
 }

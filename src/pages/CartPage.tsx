@@ -95,7 +95,11 @@ export function CartPage() {
                   aria-label={`Remove ${item.title} from cart`}
                   title={`Remove ${item.title}`}
                 >
-                  <img src={TrashIconSrc} alt="Remove" className="w-4 h-4" />
+                  <img
+                    src={TrashIconSrc}
+                    alt="Remove"
+                    className="h-4 w-4 brightness-0 invert"
+                  />
                 </button>
               </div>
             </div>

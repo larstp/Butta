@@ -2,6 +2,11 @@ import { useNavigate } from "react-router-dom";
 import { useCart } from "../../hooks/useCart";
 import { useToast } from "../../hooks/useToast";
 import type { Product } from "../../types/product";
+import {
+  getCurrentPrice,
+  getDiscountPercent,
+  isProductOnSale,
+} from "../../utils/price";
 
 type ProductCardProps = {
   product: Product;
@@ -43,19 +48,16 @@ function AddToCartButtonInline({
   );
 }
 
+/**
+ * Renders a product summary with pricing, sale information, tags, and cart action.
+ *
+ * @param props Product data to display.
+ */
 export function ProductCard({ product }: ProductCardProps) {
   const navigate = useNavigate();
-  const hasDiscount =
-    product.discountedPrice !== null && product.discountedPrice !== undefined;
-  const currentPrice = hasDiscount ? product.discountedPrice : product.price;
-  const discountPercent =
-    hasDiscount && product.price > 0
-      ? Math.round(
-          ((product.price - (product.discountedPrice ?? product.price)) /
-            product.price) *
-            100,
-        )
-      : 0;
+  const hasDiscount = isProductOnSale(product);
+  const currentPrice = getCurrentPrice(product);
+  const discountPercent = getDiscountPercent(product);
 
   return (
     <article
@@ -96,13 +98,27 @@ export function ProductCard({ product }: ProductCardProps) {
           </p>
         </div>
 
+        {product.tags.length > 0 && (
+          <ul className="flex flex-wrap gap-2 mt-4 list-none">
+            {product.tags.slice(0, 3).map((tag) => (
+              <li
+                key={tag}
+                className="cursor-default select-none rounded-md bg-white/10 px-2.5 py-1 text-xs font-medium text-text-tertiary"
+                onClick={(event) => event.stopPropagation()}
+              >
+                {tag}
+              </li>
+            ))}
+          </ul>
+        )}
+
         <div className="flex items-stretch justify-between gap-4 mt-4">
           <div className="flex flex-col justify-between flex-1 min-w-0">
             <p className="text-lg font-bold text-teal-accent">
               {formatPrice(currentPrice ?? product.price)}
             </p>
             {hasDiscount && (
-              <p className="text-sm line-through text-text-muted">
+              <p className="text-sm text-red-700 line-through">
                 {formatPrice(product.price)}
               </p>
             )}
@@ -114,24 +130,10 @@ export function ProductCard({ product }: ProductCardProps) {
             </div>
           </div>
 
-          <div className="inline-flex items-center justify-center px-4 text-sm font-medium border-2 rounded-md h-11 bg-dark-bg text-(--teal) border-white self-end">
+          <div className="inline-flex items-center self-end justify-center px-3 text-sm font-medium cursor-default select-none h-11 text-(--teal)">
             ★ {product.rating}
           </div>
         </div>
-
-        {product.tags.length > 0 && (
-          <ul className="flex flex-wrap gap-2 mt-4 list-none">
-            {product.tags.slice(0, 3).map((tag) => (
-              <li
-                key={tag}
-                className="px-3 py-1 text-xs font-medium border rounded-full bg-(--teal) border-white"
-                style={{ color: "var(--dark-bg)" }}
-              >
-                {tag}
-              </li>
-            ))}
-          </ul>
-        )}
       </div>
     </article>
   );
