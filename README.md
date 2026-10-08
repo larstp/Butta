@@ -6,8 +6,7 @@
   <img src="src/assets/Butta-logo-transparent.png" alt="Butta logo" width="420" />
 </p>
 
-## See project repo on GitHub
-
+Originally cloned from old GitHub Classroom Repo:
 https://github.com/NoroffFEU/jsfw-2025-v1-larstp-jsf
 
 ### Contents:
@@ -19,7 +18,7 @@ https://github.com/NoroffFEU/jsfw-2025-v1-larstp-jsf
 
 - [Project Links](#project-links)
 
-  [POR2 Refurbishment](#por2-refurbishment)
+  [Assignment Specifics](#assignment-specifics)
 
   [2. Setup and Installation](#2-setup-and-installation)
 
@@ -59,7 +58,26 @@ The project was originally created as a short introductory assignment for the JS
 - Current project repository: https://github.com/larstp/Butta
 - Live Site (Vercel): https://butta.larstp.com
 
-### POR2 refurbishment
+### Assignment Specifics
+
+#### JS Frameworks
+
+Butta was originally created as the main project for the JS Frameworks course assignment at Noroff. The goal was to build a fully functional, responsive online shop using React, TypeScript, and a REST API.
+
+The assignment focused on applying framework and software architecture principles in a real-world digital solution. The implementation includes:
+
+- Product fetching from the Noroff Online Shop API
+- Product listings and detailed product pages
+- Search and sorting functionality
+- Discount and rating displays
+- Typed cart state management with localStorage persistence
+- Quantity updates, cart totals, and a mock checkout flow
+- A validated TypeScript contact form
+- Responsive layouts for desktop and mobile
+
+#### POR2
+
+The POR2 assignment focused on refurbishing the original JS Frameworks project and making it more presentable as part of a portfolio. This included addressing feedback from the original hand-in, improving accessibility and maintainability, refining the visual design, and fixing incomplete or inconsistent functionality.
 
 The POR2 work builds on the original JS Frameworks assignment. The original styling is preserved in the `old-styling` branch so the visual changes can be compared with the refurbished version.
 
@@ -188,5 +206,6 @@ SPA routing rewrite is included in vercel.json so direct route access works:
 
 ## 12. Contact
 
-- Author: Lars (larstp)
-- GitHub: https://github.com/larstp
+- Author: [larstp](https://github.com/larstp)
+- Courses: JavaScript Frameworks & POR2
+- Year: 2026
