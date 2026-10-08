@@ -2,14 +2,14 @@ import { useEffect, useState, type ReactNode } from "react";
 import type { CartContextValue, CartItem } from "../types/cart";
 import { CartContext } from "./cart-context";
 
-const CAR_STORAGE_KEY = "online-shop-cart";
+const CART_STORAGE_KEY = "online-shop-cart";
 
 function getInitialCartItems() {
   if (typeof window === "undefined") {
     return [] as CartItem[];
   }
 
-  const storedCart = window.localStorage.getItem(CAR_STORAGE_KEY);
+  const storedCart = window.localStorage.getItem(CART_STORAGE_KEY);
 
   if (!storedCart) {
     return [] as CartItem[];
@@ -32,11 +32,16 @@ type CartProviderProps = {
   children: ReactNode;
 };
 
+/**
+ * Provides cart state and persists cart changes in localStorage.
+ *
+ * @param props React children that can access the cart context.
+ */
 export function CartProvider({ children }: CartProviderProps) {
   const [items, setItems] = useState<CartItem[]>(getInitialCartItems);
 
   useEffect(() => {
-    window.localStorage.setItem(CAR_STORAGE_KEY, JSON.stringify(items));
+    window.localStorage.setItem(CART_STORAGE_KEY, JSON.stringify(items));
   }, [items]);
 
   const addToCart: CartContextValue["addToCart"] = (item, quantity = 1) => {
@@ -81,7 +86,7 @@ export function CartProvider({ children }: CartProviderProps) {
 
   const clearCart = () => {
     setItems([]);
-    window.localStorage.removeItem(CAR_STORAGE_KEY);
+    window.localStorage.removeItem(CART_STORAGE_KEY);
   };
 
   const value: CartContextValue = {

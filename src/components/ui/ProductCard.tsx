@@ -2,6 +2,11 @@ import { useNavigate } from "react-router-dom";
 import { useCart } from "../../hooks/useCart";
 import { useToast } from "../../hooks/useToast";
 import type { Product } from "../../types/product";
+import {
+  getCurrentPrice,
+  getDiscountPercent,
+  isProductOnSale,
+} from "../../utils/price";
 
 type ProductCardProps = {
   product: Product;
@@ -43,19 +48,16 @@ function AddToCartButtonInline({
   );
 }
 
+/**
+ * Renders a product summary with pricing, sale information, tags, and cart action.
+ *
+ * @param props Product data to display.
+ */
 export function ProductCard({ product }: ProductCardProps) {
   const navigate = useNavigate();
-  const hasDiscount =
-    product.discountedPrice !== null && product.discountedPrice !== undefined;
-  const currentPrice = hasDiscount ? product.discountedPrice : product.price;
-  const discountPercent =
-    hasDiscount && product.price > 0
-      ? Math.round(
-          ((product.price - (product.discountedPrice ?? product.price)) /
-            product.price) *
-            100,
-        )
-      : 0;
+  const hasDiscount = isProductOnSale(product);
+  const currentPrice = getCurrentPrice(product);
+  const discountPercent = getDiscountPercent(product);
 
   return (
     <article
@@ -114,7 +116,7 @@ export function ProductCard({ product }: ProductCardProps) {
             </div>
           </div>
 
-          <div className="inline-flex items-center justify-center px-4 text-sm font-medium border-2 rounded-md h-11 bg-dark-bg text-(--teal) border-white self-end">
+          <div className="inline-flex h-11 cursor-default select-none items-center justify-center self-end px-3 text-sm font-medium text-text-secondary">
             ★ {product.rating}
           </div>
         </div>
@@ -124,8 +126,8 @@ export function ProductCard({ product }: ProductCardProps) {
             {product.tags.slice(0, 3).map((tag) => (
               <li
                 key={tag}
-                className="px-3 py-1 text-xs font-medium border rounded-full bg-(--teal) border-white"
-                style={{ color: "var(--dark-bg)" }}
+                className="cursor-default select-none rounded-md bg-white/10 px-2.5 py-1 text-xs font-medium text-text-tertiary"
+                onClick={(event) => event.stopPropagation()}
               >
                 {tag}
               </li>

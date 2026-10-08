@@ -4,15 +4,17 @@ import { getProductById } from "../services/products";
 import { useCart } from "../hooks/useCart";
 import { useToast } from "../hooks/useToast";
 import type { Product } from "../types/product";
+import {
+  getCurrentPrice,
+  getDiscountPercent,
+  isProductOnSale,
+} from "../utils/price";
 
 function formatPrice(price: number) {
   return new Intl.NumberFormat("en-IE", {
     style: "currency",
     currency: "EUR",
   }).format(price);
-  {
-    /* eew I accidentally put dollars */
-  }
 }
 
 export function ProductDetailPage() {
@@ -66,17 +68,9 @@ export function ProductDetailPage() {
     );
   }
 
-  const hasDiscount =
-    product.discountedPrice !== null && product.discountedPrice !== undefined;
-  const currentPrice = hasDiscount ? product.discountedPrice : product.price;
-  const discountPercent =
-    hasDiscount && product.price > 0
-      ? Math.round(
-          ((product.price - (product.discountedPrice ?? product.price)) /
-            product.price) *
-            100,
-        )
-      : 0;
+  const hasDiscount = isProductOnSale(product);
+  const currentPrice = getCurrentPrice(product);
+  const discountPercent = getDiscountPercent(product);
 
   return (
     <div className="px-4 py-10 mx-auto max-w-7xl sm:px-6 lg:px-8">

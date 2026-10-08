@@ -58,6 +58,11 @@ button {
   padding: 0;
 }
 
+html {
+  scroll-behavior: smooth;
+  scrollbar-width: none;
+}
+
 .app-button {
   display: inline-flex;
   align-items: center;

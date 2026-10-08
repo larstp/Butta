@@ -1,6 +1,6 @@
 import type { Product } from "./product";
 
-export type AsyncStatus = "idle" | "loading" | "success" | "error"; //not sure if right way
+export type AsyncStatus = "idle" | "loading" | "success" | "error";
 
 export type AsyncState<T> = {
   status: AsyncStatus;

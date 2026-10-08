@@ -1,3 +1,4 @@
+import { lazy, Suspense, useEffect, useState } from "react";
 import { Routes, Route } from "react-router-dom";
 import { HomePage } from "./pages/HomePage";
 import { ProductDetailPage } from "./pages/ProductDetailPage";
@@ -7,19 +8,32 @@ import { ContactPage } from "./pages/ContactPage";
 import { Header } from "./components/layout/Header";
 import { Footer } from "./components/layout/Footer";
 import { ToastContainer } from "./components/ui/ToastContainer";
-import Grainient from "./components/Grainient";
+
+const Grainient = lazy(() => import("./components/Grainient"));
 
 function App() {
+  const [showGrainient, setShowGrainient] = useState(false);
+
+  useEffect(() => {
+    const frame = requestAnimationFrame(() => setShowGrainient(true));
+
+    return () => cancelAnimationFrame(frame);
+  }, []);
+
   return (
     <>
       <div className="fixed inset-0 z-0 w-screen h-screen bg-dark-bg">
-        <Grainient
-          color1="#168F88"
-          color2="#0A4545"
-          color3="#02141B"
-          timeSpeed={0.275}
-          zoom={0.9}
-        />
+        <Suspense fallback={null}>
+          {showGrainient && (
+            <Grainient
+              color1="#168F88"
+              color2="#0A4545"
+              color3="#02141B"
+              timeSpeed={0.275}
+              zoom={0.9}
+            />
+          )}
+        </Suspense>
       </div>
       <div className="relative z-10 flex flex-col min-h-screen text-text-primary">
         <Header />

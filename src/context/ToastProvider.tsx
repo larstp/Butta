@@ -6,6 +6,11 @@ type ToastProviderProps = {
   children: ReactNode;
 };
 
+/**
+ * Provides toast state and automatically removes notifications after three seconds.
+ *
+ * @param props React children that can access the toast context.
+ */
 export function ToastProvider({ children }: ToastProviderProps) {
   const [toasts, setToasts] = useState<Toast[]>([]);
   const idRef = useRef(0);

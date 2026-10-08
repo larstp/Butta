@@ -54,6 +54,13 @@ function buildQueryString(query?: Record<string, ApiQueryValue>) {
   return queryString ? `?${queryString}` : "";
 }
 
+/**
+ * Builds a Noroff API URL from a path and optional query parameters.
+ *
+ * @param path API endpoint path, such as `/online-shop`.
+ * @param query Optional query parameters. Empty, null, and undefined values are omitted.
+ * @returns The complete API URL.
+ */
 export function buildApiUrl(
   path: string,
   query?: Record<string, ApiQueryValue>,
@@ -61,7 +68,15 @@ export function buildApiUrl(
   return `${NOROFF_API_BASE_URL}${path}${buildQueryString(query)}`;
 }
 
-// Trying a new thing. Scrimba course says this is more DRY
+/**
+ * Sends a request to the Noroff API and parses the JSON response.
+ *
+ * @param path API endpoint path.
+ * @param options Fetch options such as method, headers, or request body.
+ * @param query Optional query parameters.
+ * @returns A promise containing the typed API response.
+ * @throws {ApiRequestError} When the API responds with a non-success status.
+ */
 export async function request<T>(
   path: string,
   options: RequestInit = {},
