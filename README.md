@@ -44,6 +44,32 @@ https://github.com/NoroffFEU/jsfw-2025-v1-larstp-jsf
 
 </details>
 
+<details>
+  <summary>Project Screenshots</summary>
+
+  <table>
+    <tr>
+      <td align="center">
+        <img src="public/img/screenshots/butta-hero.webp" alt="Butta home page hero" width="360" />
+        <br />
+        <sub>Home page hero and product search</sub>
+      </td>
+      <td align="center">
+        <img src="public/img/screenshots/butta-product.webp" alt="Butta product detail page" width="360" />
+        <br />
+        <sub>Product detail page</sub>
+      </td>
+    </tr>
+    <tr>
+      <td align="center">
+        <img src="public/img/screenshots/butta-cart.webp" alt="Butta shopping cart page" width="360" />
+        <br />
+        <sub>Shopping cart</sub>
+      </td>
+    </tr>
+  </table>
+</details>
+
 ---
 
 ## 1. Project Overview
